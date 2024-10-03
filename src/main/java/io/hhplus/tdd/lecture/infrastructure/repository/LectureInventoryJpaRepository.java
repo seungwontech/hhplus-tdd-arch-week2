@@ -10,4 +10,6 @@ public interface LectureInventoryJpaRepository extends JpaRepository<LectureInve
     List<LectureInventory> findByLectureId(Long lectureId);
 
     LectureInventory findByLectureIdAndLectureItemId(Long lectureId, Long lectureItemId);
+
+    LectureInventory findByLectureItemId(Long lectureItemId);
 }

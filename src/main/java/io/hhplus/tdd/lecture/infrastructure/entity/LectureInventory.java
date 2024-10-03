@@ -25,9 +25,10 @@ public class LectureInventory {
     private int amount; // 잔여 수량
 
     @Builder
-    private LectureInventory(Long id, Long lectureId, Long lectureItemId) {
+    private LectureInventory(Long id, Long lectureId, Long lectureItemId, int amount) {
         this.id = id;
         this.lectureId = lectureId;
         this.lectureItemId = lectureItemId;
+        this.amount = amount;
     }
 }

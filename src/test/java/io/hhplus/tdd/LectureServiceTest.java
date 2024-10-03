@@ -189,6 +189,7 @@ public class LectureServiceTest {
                 .userId(userId)
                 .build();
 
+        doReturn(LectureInventoryDTO.builder().id(1L).lectureId(1L).lectureItemId(lectureItemId).amount(30).build()).when(lectureInventoryRepository).getAmount(lectureItemId);
         doReturn(null).when(lectureApplicationRepository).getLectureApplication(lectureItemId, userId);
         doReturn(savedLectureApplicationDTO).when(lectureApplicationRepository).save(any(LectureApplicationDTO.class));
 
@@ -197,6 +198,20 @@ public class LectureServiceTest {
 
         // then
         assertThat(result.getId()).isNotNull();
+    }
+
+    @Test
+    public void 사용자_특강신청하기_인원초과_실패() {
+        // given
+        Long lectureItemId = 1L;
+        int amount = 0;
+        doReturn(LectureInventoryDTO.builder().id(1L).lectureId(1L).lectureItemId(lectureItemId).amount(amount).build()).when(lectureInventoryRepository).getAmount(lectureItemId);
+
+        // when
+        final LectureException result = assertThrows(LectureException.class, () -> lectureService.getAmount(lectureItemId));
+
+        // then
+        assertThat(result.getLectureErrorResult()).isEqualTo(LectureErrorResult.LECTURE_CAPACITY_EXCEEDED);
     }
 
     @Test

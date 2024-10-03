@@ -12,6 +12,7 @@ public enum LectureErrorResult {
     LECTURE_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "강의 세부 내역을 찾을 수 없습니다."),
 
     DUPLICATE_LECTURE_APPLICATION(HttpStatus.BAD_REQUEST, "강의를 이미 신청하셨습니다."),
+    LECTURE_CAPACITY_EXCEEDED(HttpStatus.BAD_REQUEST, "강의를 인원 초과했습니다.더 이상 신청 불가능합니다."),
     ;
 
     private final HttpStatus httpStatus;

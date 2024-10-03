@@ -1,7 +1,6 @@
 package io.hhplus.tdd.lecture.domain.repository;
 
 import io.hhplus.tdd.lecture.domain.model.LectureInventoryDTO;
-import io.hhplus.tdd.lecture.domain.model.LectureItemDTO;
 
 import java.util.List;
 
@@ -11,4 +10,7 @@ public interface LectureInventoryRepository {
 
     LectureInventoryDTO getLectureInventory(Long lectureId, Long lectureItemId);
 
+    LectureInventoryDTO getAmount(Long lectureItemId);
+
+    void save(LectureInventoryDTO lectureInventoryDTO);
 }

@@ -38,8 +38,27 @@ public class LectureInventoryRepositoryImpl implements LectureInventoryRepositor
         return convertToDTO(result);
     }
 
+    @Override
+    public LectureInventoryDTO getAmount(Long lectureItemId) {
+        LectureInventory result = lectureInventoryJpaRepository.findByLectureItemId(lectureItemId);
+        return convertToDTO(result);
+    }
+
+    @Override
+    public void save(LectureInventoryDTO lectureInventoryDTO) {
+        LectureInventory lectureInventory = LectureInventory.builder()
+                .lectureItemId(lectureInventoryDTO.getLectureItemId())
+                .lectureId(lectureInventoryDTO.getLectureId())
+                .id(lectureInventoryDTO.getId())
+                .amount(lectureInventoryDTO.getAmount() - 1)
+                .build();
+
+        lectureInventoryJpaRepository.save(lectureInventory);
+    }
+
     private LectureInventoryDTO convertToDTO(LectureInventory lectureInventory) {
         return LectureInventoryDTO.builder()
+                .id(lectureInventory.getId())
                 .lectureItemId(lectureInventory.getLectureItemId())
                 .lectureId(lectureInventory.getLectureId())
                 .amount(lectureInventory.getAmount())

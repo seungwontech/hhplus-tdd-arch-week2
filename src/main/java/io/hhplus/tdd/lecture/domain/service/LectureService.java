@@ -7,7 +7,6 @@ import io.hhplus.tdd.lecture.domain.repository.LectureApplicationRepository;
 import io.hhplus.tdd.lecture.domain.repository.LectureInventoryRepository;
 import io.hhplus.tdd.lecture.domain.repository.LectureItemRepository;
 import io.hhplus.tdd.lecture.domain.repository.LectureRepository;
-import io.hhplus.tdd.lecture.infrastructure.entity.LectureItem;
 import io.hhplus.tdd.lecture.presentation.dto.LectureApplicationAddResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -48,12 +46,16 @@ public class LectureService {
             throw new LectureException(LectureErrorResult.DUPLICATE_LECTURE_APPLICATION);
         }
 
+        LectureInventoryDTO lectureInventoryDTO = getAmount(lectureItemId);
+
         LectureApplicationDTO lectureApplicationDTO = LectureApplicationDTO.builder()
                 .lectureItemId(lectureItemId)
                 .userId(userId)
                 .build();
 
         LectureApplicationDTO savedLectureApplication = lectureApplicationRepository.save(lectureApplicationDTO);
+
+        updateAmount(lectureInventoryDTO);
 
         return LectureApplicationAddResponse.builder()
                 .id(savedLectureApplication.getId())
@@ -161,5 +163,17 @@ public class LectureService {
         }
 
         return lectureItemDTO;
+    }
+
+    public LectureInventoryDTO getAmount(Long lectureItemId) {
+        LectureInventoryDTO lectureInventoryDTO= lectureInventoryRepository.getAmount(lectureItemId);
+        if (lectureInventoryDTO.getAmount() <= 0) {
+            throw new LectureException(LectureErrorResult.LECTURE_CAPACITY_EXCEEDED);
+        }
+        return lectureInventoryDTO;
+    }
+
+    public void updateAmount(LectureInventoryDTO lectureInventoryDTO) {
+        lectureInventoryRepository.save(lectureInventoryDTO);
     }
 }
