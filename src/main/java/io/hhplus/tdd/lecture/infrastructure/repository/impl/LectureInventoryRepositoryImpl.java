@@ -1,7 +1,6 @@
 package io.hhplus.tdd.lecture.infrastructure.repository.impl;
 
 import io.hhplus.tdd.lecture.domain.model.LectureInventoryDTO;
-import io.hhplus.tdd.lecture.domain.model.LectureItemDTO;
 import io.hhplus.tdd.lecture.domain.repository.LectureInventoryRepository;
 import io.hhplus.tdd.lecture.infrastructure.repository.LectureInventoryJpaRepository;
 import lombok.RequiredArgsConstructor;

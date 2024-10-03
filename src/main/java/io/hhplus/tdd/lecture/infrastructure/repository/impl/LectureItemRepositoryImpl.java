@@ -1,9 +1,7 @@
 package io.hhplus.tdd.lecture.infrastructure.repository.impl;
 
-import io.hhplus.tdd.lecture.domain.model.LectureApplicationDTO;
 import io.hhplus.tdd.lecture.domain.model.LectureItemDTO;
 import io.hhplus.tdd.lecture.domain.repository.LectureItemRepository;
-import io.hhplus.tdd.lecture.infrastructure.entity.LectureApplication;
 import io.hhplus.tdd.lecture.infrastructure.entity.LectureItem;
 import io.hhplus.tdd.lecture.infrastructure.repository.LectureItemJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Repository
@@ -35,9 +32,9 @@ public class LectureItemRepositoryImpl implements LectureItemRepository {
     }
 
     @Override
-    public LectureItemDTO getLectureItem(Long lectureId, Date lectureDate) {
+    public LectureItemDTO getLectureItem(Long lectureId, Date Date) {
 
-        LectureItem result = lectureItemJpaRepository.findByLectureIdAndLectureDate(lectureId, lectureDate);
+        LectureItem result = lectureItemJpaRepository.findByLectureIdAndDate(lectureId, Date);
 
         return convertToDTO(result);
     }
