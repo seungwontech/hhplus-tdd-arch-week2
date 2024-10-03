@@ -2,10 +2,7 @@ package io.hhplus.tdd;
 
 import io.hhplus.tdd.lecture.domain.exception.LectureErrorResult;
 import io.hhplus.tdd.lecture.domain.exception.LectureException;
-import io.hhplus.tdd.lecture.domain.model.LectureApplicationDTO;
-import io.hhplus.tdd.lecture.domain.model.LectureDTO;
-import io.hhplus.tdd.lecture.domain.model.LectureInventoryDTO;
-import io.hhplus.tdd.lecture.domain.model.LectureItemDTO;
+import io.hhplus.tdd.lecture.domain.model.*;
 import io.hhplus.tdd.lecture.domain.repository.LectureApplicationRepository;
 import io.hhplus.tdd.lecture.domain.repository.LectureInventoryRepository;
 import io.hhplus.tdd.lecture.domain.repository.LectureItemRepository;
@@ -18,9 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -110,10 +105,34 @@ public class LectureServiceTest {
     }
 
     @Test
-    public void 특강세부항목상세조회_성공() throws ParseException {
+    public void 특강세부항목날짜로조회_성공() {
         // given
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date lectureDate = formatter.parse("2024-10-03");
+        LocalDate lectureDate1 = LocalDate.parse("2024-10-03");
+
+        LectureDTO lectureDTO = LectureDTO.builder().id(lectureId).name("스프링 특강").instructor("이강사").build();
+
+        LectureInventoryDTO lectureInventoryDTO = LectureInventoryDTO.builder().id(1L).lectureId(lectureId).lectureItemId(lectureItemId).amount(30).build();
+
+        LectureItemDTO lectureItemDTO1 = LectureItemDTO.builder().id(1L).lectureId(lectureId).date(lectureDate1).capacity(30).build();
+        List<LectureItemDTO> lectureItemDTOs = List.of(lectureItemDTO1);
+
+        doReturn(lectureDTO).when(lectureRepository).getLecture(lectureId);
+        doReturn(lectureInventoryDTO).when(lectureInventoryRepository).getLectureInventory(lectureId, lectureItemId);
+        doReturn(lectureItemDTOs).when(lectureItemRepository).getAvailableLecturesByDate(lectureDate1);
+
+        // when
+        List<LectureDetailDTO> result = lectureService.getAvailableLecturesByDate(lectureDate1);
+
+        // then
+        assertThat(result.get(0).getLectureId()).isEqualTo(lectureId);
+    }
+
+
+
+    @Test
+    public void 특강세부항목상세조회_성공() {
+        // given
+        LocalDate lectureDate = LocalDate.parse("2024-10-03");
 
         LectureItemDTO lectureItemDTO = LectureItemDTO.builder().id(1L).lectureId(lectureId).date(lectureDate).capacity(30).build();
         doReturn(lectureItemDTO).when(lectureItemRepository).getLectureItem(lectureId, lectureDate);
@@ -127,11 +146,10 @@ public class LectureServiceTest {
     }
 
     @Test
-    public void 특강세부항목조회_성공() throws ParseException {
+    public void 특강세부항목조회_성공() {
         // given
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date lectureDate1 = formatter.parse("2024-10-03");
-        Date lectureDate2 = formatter.parse("2024-10-04");
+        LocalDate lectureDate1 = LocalDate.parse("2024-10-03");
+        LocalDate lectureDate2 = LocalDate.parse("2024-10-03");
 
         LectureItemDTO lectureItemDTO1 = LectureItemDTO.builder().id(1L).lectureId(lectureId).date(lectureDate1).capacity(30).build();
         LectureItemDTO lectureItemDTO2 = LectureItemDTO.builder().id(2L).lectureId(lectureId).date(lectureDate2).capacity(30).build();

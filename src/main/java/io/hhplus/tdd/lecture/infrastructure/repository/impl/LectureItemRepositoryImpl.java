@@ -7,8 +7,8 @@ import io.hhplus.tdd.lecture.infrastructure.repository.LectureItemJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -32,11 +32,27 @@ public class LectureItemRepositoryImpl implements LectureItemRepository {
     }
 
     @Override
-    public LectureItemDTO getLectureItem(Long lectureId, Date Date) {
+    public LectureItemDTO getLectureItem(Long lectureId, LocalDate Date) {
 
         LectureItem result = lectureItemJpaRepository.findByLectureIdAndDate(lectureId, Date);
 
         return convertToDTO(result);
+    }
+
+    @Override
+    public List<LectureItemDTO> getAvailableLecturesByDate(LocalDate date) {
+
+        List<LectureItem> lectureItems = lectureItemJpaRepository.findByDate(date);
+        if (lectureItems == null) {
+            return null;
+        }
+        List<LectureItemDTO> result = new ArrayList<>();
+
+        for (LectureItem lectureItem : lectureItems) {
+            result.add(convertToDTO(lectureItem));
+        }
+
+        return result;
     }
 
     private LectureItemDTO convertToDTO(LectureItem lectureItem) {
