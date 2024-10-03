@@ -1,10 +1,8 @@
 package io.hhplus.tdd.lecture.infrastructure.repository.impl;
 
 import io.hhplus.tdd.lecture.domain.model.LectureApplicationDTO;
-import io.hhplus.tdd.lecture.domain.model.LectureInventoryDTO;
 import io.hhplus.tdd.lecture.domain.repository.LectureApplicationRepository;
 import io.hhplus.tdd.lecture.infrastructure.entity.LectureApplication;
-import io.hhplus.tdd.lecture.infrastructure.entity.LectureInventory;
 import io.hhplus.tdd.lecture.infrastructure.repository.LectureApplicationJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -37,7 +35,7 @@ public class LectureApplicationRepositoryImpl implements LectureApplicationRepos
                 .build();
 
         LectureApplication savedLectureApplication = lectureApplicationJpaRepository.save(lectureApplication);
-        System.out.println(savedLectureApplication.getUserId());
+
         return convertToDTO(savedLectureApplication);
     }
 
