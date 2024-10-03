@@ -10,6 +10,7 @@ import io.hhplus.tdd.lecture.domain.repository.LectureRepository;
 import io.hhplus.tdd.lecture.presentation.dto.LectureApplicationAddResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class LectureService {
         return lectureApplication;
     }
 
+    @Transactional
     public LectureApplicationAddResponse applicationForLecture(Long lectureItemId, Long userId) {
 
         LectureApplicationDTO result = lectureApplicationRepository.getLectureApplication(lectureItemId, userId);
