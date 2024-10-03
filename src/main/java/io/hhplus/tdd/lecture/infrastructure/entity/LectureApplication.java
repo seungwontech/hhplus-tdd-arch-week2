@@ -27,9 +27,10 @@ public class LectureApplication {
     private LocalDateTime applicationDate; // 신청 날짜
 
     @Builder
-    public LectureApplication(Long id, Long lectureItemId, Long userId) {
+    public LectureApplication(Long id, Long lectureItemId, Long userId, LocalDateTime applicationDate) {
         this.id = id;
         this.lectureItemId = lectureItemId;
         this.userId = userId;
+        this.applicationDate = applicationDate;
     }
 }

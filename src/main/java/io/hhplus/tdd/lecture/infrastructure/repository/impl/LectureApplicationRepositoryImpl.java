@@ -7,6 +7,8 @@ import io.hhplus.tdd.lecture.infrastructure.repository.LectureApplicationJpaRepo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor
 @Repository
 public class LectureApplicationRepositoryImpl implements LectureApplicationRepository {
@@ -16,7 +18,9 @@ public class LectureApplicationRepositoryImpl implements LectureApplicationRepos
     @Override
     public LectureApplicationDTO getLectureApplication(Long lectureItemId, Long userId) {
         LectureApplication result = lectureApplicationJpaRepository.findByLectureItemIdAndUserId(lectureItemId, userId);
-
+        if (result == null) {
+            return null;
+        }
         return convertToDTO(result);
     }
 
@@ -25,18 +29,20 @@ public class LectureApplicationRepositoryImpl implements LectureApplicationRepos
         LectureApplication lectureApplication = LectureApplication.builder()
                 .lectureItemId(lectureApplicationDTO.getLectureItemId())
                 .userId(lectureApplicationDTO.getUserId())
+                .applicationDate(LocalDateTime.now())
                 .build();
 
         LectureApplication savedLectureApplication = lectureApplicationJpaRepository.save(lectureApplication);
-
+        System.out.println(savedLectureApplication.getUserId());
         return convertToDTO(savedLectureApplication);
     }
 
     private LectureApplicationDTO convertToDTO(LectureApplication lectureApplication) {
         return LectureApplicationDTO.builder()
+                .id(lectureApplication.getId())
                 .lectureItemId(lectureApplication.getLectureItemId())
                 .userId(lectureApplication.getUserId())
-                .id(lectureApplication.getId())
+                .applicationDate(lectureApplication.getApplicationDate())
                 .build();
     }
 }
