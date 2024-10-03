@@ -10,6 +10,6 @@ public interface LectureItemJpaRepository extends JpaRepository<LectureItem, Lon
 
     List<LectureItem> findByLectureId(Long lectureId);
 
-    LectureItem findByLectureIdAndLectureDate(Long lectureId, Date lectureDate);
+    LectureItem findByLectureIdAndDate(Long lectureId, Date lectureDate);
 
 }
