@@ -1,13 +1,17 @@
 package io.hhplus.tdd.lecture.infrastructure.repository.impl;
 
 import io.hhplus.tdd.lecture.domain.model.LectureApplicationDTO;
+import io.hhplus.tdd.lecture.domain.model.LectureInventoryDTO;
 import io.hhplus.tdd.lecture.domain.repository.LectureApplicationRepository;
 import io.hhplus.tdd.lecture.infrastructure.entity.LectureApplication;
+import io.hhplus.tdd.lecture.infrastructure.entity.LectureInventory;
 import io.hhplus.tdd.lecture.infrastructure.repository.LectureApplicationJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
@@ -35,6 +39,21 @@ public class LectureApplicationRepositoryImpl implements LectureApplicationRepos
         LectureApplication savedLectureApplication = lectureApplicationJpaRepository.save(lectureApplication);
         System.out.println(savedLectureApplication.getUserId());
         return convertToDTO(savedLectureApplication);
+    }
+
+    @Override
+    public List<LectureApplicationDTO> getLectureApplications(Long userId) {
+        List<LectureApplication> lectureApplications = lectureApplicationJpaRepository.findByUserId(userId);
+        if (lectureApplications == null) {
+            return null;
+        }
+        List<LectureApplicationDTO> result = new ArrayList<>();
+
+        for (LectureApplication lectureApplication : lectureApplications) {
+            result.add(convertToDTO(lectureApplication));
+        }
+
+        return result;
     }
 
     private LectureApplicationDTO convertToDTO(LectureApplication lectureApplication) {

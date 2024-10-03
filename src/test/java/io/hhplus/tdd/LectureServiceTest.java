@@ -127,7 +127,21 @@ public class LectureServiceTest {
         assertThat(result.get(0).getLectureId()).isEqualTo(lectureId);
     }
 
+    @Test
+    public void 특강세부항목아이디로상세조회_성공() {
+        // given
+        LocalDate lectureDate = LocalDate.parse("2024-10-03");
 
+        LectureItemDTO lectureItemDTO = LectureItemDTO.builder().id(1L).lectureId(lectureId).date(lectureDate).capacity(30).build();
+        doReturn(lectureItemDTO).when(lectureItemRepository).getLectureItemById(1L);
+
+        // when
+        LectureItemDTO result = lectureService.getLectureItemById(1L);
+
+        // then
+        assertThat(result.getLectureId()).isEqualTo(lectureId);
+        assertThat(result.getDate()).isEqualTo(lectureDate);
+    }
 
     @Test
     public void 특강세부항목상세조회_성공() {
@@ -223,4 +237,37 @@ public class LectureServiceTest {
         // then
         assertThat(result.getLectureErrorResult()).isEqualTo(LectureErrorResult.LECTURE_APPLICATION_NOT_FOUND);
     }
+
+    @Test
+    public void 사용자_특강신청목록조회_성공() {
+        // given
+        LectureApplicationDTO lectureApplicationDTO1 = LectureApplicationDTO.builder().id(1L).lectureItemId(1L).userId(userId).build();
+        LectureApplicationDTO lectureApplicationDTO2 = LectureApplicationDTO.builder().id(2L).lectureItemId(2L).userId(userId).build();
+        List<LectureApplicationDTO> lectureApplicationDTOs = List.of(lectureApplicationDTO1, lectureApplicationDTO2);
+        doReturn(lectureApplicationDTOs).when(lectureApplicationRepository).getLectureApplications(userId);
+
+        // when
+        List<LectureApplicationDTO> result = lectureService.getLectureApplications(userId);
+
+        // then
+        assertThat(result.get(0).getUserId()).isEqualTo(userId);
+        assertThat(result.get(1).getUserId()).isEqualTo(userId);
+    }
+
+    @Test
+    public void 사용자_특강신청목록조회_실패() {
+        // given
+        LectureApplicationDTO lectureApplicationDTO1 = LectureApplicationDTO.builder().id(1L).lectureItemId(1L).userId(userId).build();
+        LectureApplicationDTO lectureApplicationDTO2 = LectureApplicationDTO.builder().id(2L).lectureItemId(2L).userId(userId).build();
+        List<LectureApplicationDTO> lectureApplicationDTOs = List.of(lectureApplicationDTO1, lectureApplicationDTO2);
+        doReturn(lectureApplicationDTOs).when(lectureApplicationRepository).getLectureApplications(userId);
+
+        // when
+        List<LectureApplicationDTO> result = lectureService.getLectureApplications(userId);
+
+        // then
+        assertThat(result.get(0).getUserId()).isEqualTo(userId);
+        assertThat(result.get(1).getUserId()).isEqualTo(userId);
+    }
+
 }

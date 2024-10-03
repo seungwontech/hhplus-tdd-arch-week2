@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -53,6 +54,15 @@ public class LectureItemRepositoryImpl implements LectureItemRepository {
         }
 
         return result;
+    }
+
+    @Override
+    public LectureItemDTO getLectureItemById(long lectureItemId) {
+        LectureItem lectureItem = lectureItemJpaRepository.getLectureItemById(lectureItemId);
+        if (lectureItem == null) {
+            return null;
+        }
+        return convertToDTO(lectureItem);
     }
 
     private LectureItemDTO convertToDTO(LectureItem lectureItem) {

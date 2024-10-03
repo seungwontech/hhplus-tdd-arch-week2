@@ -7,6 +7,7 @@ import io.hhplus.tdd.lecture.domain.repository.LectureApplicationRepository;
 import io.hhplus.tdd.lecture.domain.repository.LectureInventoryRepository;
 import io.hhplus.tdd.lecture.domain.repository.LectureItemRepository;
 import io.hhplus.tdd.lecture.domain.repository.LectureRepository;
+import io.hhplus.tdd.lecture.infrastructure.entity.LectureItem;
 import io.hhplus.tdd.lecture.presentation.dto.LectureApplicationAddResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -117,5 +119,47 @@ public class LectureService {
         }
 
         return lectureDetails;
+    }
+
+    public List<LectureApplicationDTO> getLectureApplications(Long userId) {
+
+        List<LectureApplicationDTO> lectureApplications = lectureApplicationRepository.getLectureApplications(userId);
+
+        if (lectureApplications == null) {
+            throw new LectureException(LectureErrorResult.LECTURE_APPLICATION_NOT_FOUND);
+        }
+
+        return lectureApplications;
+    }
+
+    public List<LectureApplicationDetailDTO> getCompletedApplicationsByUserId(Long userId) {
+        List<LectureApplicationDTO> lectureApplications = getLectureApplications(userId);
+
+        List<LectureApplicationDetailDTO> lectureApplicationDetailDTOs = new ArrayList<>();
+        for (LectureApplicationDTO info : lectureApplications) {
+
+            LectureItemDTO lectureItem = getLectureItemById(info.getLectureItemId());
+
+            LectureDTO lecture = getLecture(lectureItem.getLectureId());
+
+            LectureApplicationDetailDTO lectureApplicationDetailDTO = LectureApplicationDetailDTO.builder()
+                    .lectureId(lecture.getId())
+                    .lectureName(lecture.getName())
+                    .instructor(lecture.getInstructor())
+                    .build();
+            lectureApplicationDetailDTOs.add(lectureApplicationDetailDTO);
+        }
+
+        return lectureApplicationDetailDTOs;
+    }
+
+    public LectureItemDTO getLectureItemById(long lectureItemId) {
+
+        LectureItemDTO lectureItemDTO = lectureItemRepository.getLectureItemById(lectureItemId);
+        if (lectureItemDTO == null) {
+            throw new LectureException(LectureErrorResult.LECTURE_ITEM_NOT_FOUND);
+        }
+
+        return lectureItemDTO;
     }
 }

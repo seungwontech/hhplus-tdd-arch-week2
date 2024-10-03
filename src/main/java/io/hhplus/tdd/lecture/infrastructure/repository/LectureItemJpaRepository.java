@@ -1,5 +1,6 @@
 package io.hhplus.tdd.lecture.infrastructure.repository;
 
+import io.hhplus.tdd.lecture.domain.model.LectureItemDTO;
 import io.hhplus.tdd.lecture.infrastructure.entity.LectureItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,4 +14,6 @@ public interface LectureItemJpaRepository extends JpaRepository<LectureItem, Lon
     LectureItem findByLectureIdAndDate(Long lectureId, LocalDate lectureDate);
 
     List<LectureItem> findByDate(LocalDate date);
+
+    LectureItem getLectureItemById(long lectureItemId);
 }
