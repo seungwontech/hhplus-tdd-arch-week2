@@ -52,4 +52,32 @@ public class LectureServiceIntegrationTest {
         assertEquals(10, failedOperations.get(), "동시 다발적으로 40명이 신청해서 10명이 실패해야 합니다.");
 
     }
+
+    @Test
+    public void 동일한유저로같은특강5번신청했을때1번만성공하는것을검증() throws InterruptedException {
+        // given
+        AtomicInteger failedOperations = new AtomicInteger(0);
+        AtomicInteger successCount = new AtomicInteger(0);
+        CountDownLatch latch = new CountDownLatch(5);
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+
+        for (int i = 0; i < 5; i++) {
+            executorService.submit(() -> {
+                try {
+                    lectureService.applicationForLecture(1L, 101L);
+                    successCount.incrementAndGet();
+                } catch (RuntimeException e) {
+                    failedOperations.incrementAndGet();
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+        executorService.shutdown();
+        // then
+        assertEquals(1, successCount.get(), "성공 카운트가 1");
+        assertEquals(4, failedOperations.get(), "실패 카운트가 4");
+    }
 }
