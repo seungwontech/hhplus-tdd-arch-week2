@@ -42,13 +42,13 @@ public class LectureService {
     @Transactional
     public LectureApplicationAddResponse applicationForLecture(Long lectureItemId, Long userId) {
 
+        LectureInventoryDTO lectureInventoryDTO = getAmount(lectureItemId);
+
         LectureApplicationDTO result = lectureApplicationRepository.getLectureApplication(lectureItemId, userId);
 
         if (result != null) {
             throw new LectureException(LectureErrorResult.DUPLICATE_LECTURE_APPLICATION);
         }
-
-        LectureInventoryDTO lectureInventoryDTO = getAmount(lectureItemId);
 
         LectureApplicationDTO lectureApplicationDTO = LectureApplicationDTO.builder()
                 .lectureItemId(lectureItemId)
